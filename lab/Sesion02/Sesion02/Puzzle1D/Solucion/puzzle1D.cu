@@ -50,7 +50,7 @@ int main(int argc, char** argv)
   else if (argc == 3) { test = *argv[2]; N = atoi(argv[1]); }
   else { printf("Usage: ./exe TAM test\n"); exit(0); }
 
-  // Esta porciÃn de codigo la explicaremos en clase
+  // Esta porciï¿½n de codigo la explicaremos en clase
   cudaGetDeviceCount(&count);
   srand(time(NULL)); 
   gpu = rand(); 

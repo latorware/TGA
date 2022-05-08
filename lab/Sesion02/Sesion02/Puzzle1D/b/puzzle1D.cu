@@ -13,9 +13,9 @@ void puzzle1DSeq(int N, float *z, float *x, float *y) {
 }
 
 __global__ void puzzle1DPAR(int N, float *z, float *x, float *y) {
-
-   // Aqui va vuestro codigo
-
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  if (i < N)
+    z[i] = 0.5*x[i] + 0.75*y[i] + x[i]*y[i];
 }
 
 
@@ -50,7 +50,7 @@ int main(int argc, char** argv)
   else if (argc == 3) { test = *argv[2]; N = atoi(argv[1]); }
   else { printf("Usage: ./exe TAM test\n"); exit(0); }
 
-  // Esta porcion de codigo la explicaremos en clase
+  // Esta porci�n de codigo la explicaremos en clase
   cudaGetDeviceCount(&count);
   srand(time(NULL)); 
   gpu = rand(); 
@@ -58,10 +58,11 @@ int main(int argc, char** argv)
 
 
   N = N * 1024;
-  //N = N - 1;    //Descomentar esta linea para probar dimensiones NO multiplo del #threads
+  N = N - 1;    //Descomentar esta linea para probar dimensiones NO multiplo del #threads
 
   nThreads = THREADS;
-  nBlocks = N/nThreads;  // Solo funciona bien si N multiplo de nThreads
+  //nBlocks = N/nThreads;  // Solo funciona bien si N multiplo de nThreads
+  nBlocks = (N + nThreads - 1)/nThreads;  // Funciona bien en cualquier caso
   numBytes = N * sizeof(float);
 
   dim3 dimGrid(nBlocks, 1, 1);
